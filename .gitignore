@@ -17,3 +17,6 @@
 /trainer
 /web/.idea
 /web/api_logs.txt
+/wheels
+/tools/datasetgenerator/configuration.py
+/tools/votingconsole/configuration.py
