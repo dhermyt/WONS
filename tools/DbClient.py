@@ -1,6 +1,7 @@
 import pymongo
 from urllib.parse import quote_plus
 from datetime import datetime
+
 class DbClient:
     __client = None
     __db = None

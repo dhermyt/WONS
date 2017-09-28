@@ -50,23 +50,6 @@ class NltkClassifierWrapper(object):
     def classify(self, featureset, default_label=None):
         if not self.is_initialized:
             return
-            # if default_label is not None:
-            #     try:
-            #         prob_classify = self.prob_classify(featureset)
-            #         prob_samples = [round(prob_classify.prob(sample), 2) for sample in prob_classify.samples()]
-            #         if (prob_samples.count(prob_samples[0]) == len(prob_samples)):
-            #             return default_label
-            #     except AttributeError:
-            #         pass
-            # if 'PYCHARM_HOSTED' in os.environ:
-            #     print(featureset)
-            #     for sample in prob_classify.samples():
-            #         print(sample, prob_classify.prob(sample))
-            # if prob_classify is not None and default_label is not None:
-            #     prob_samples = [round(prob_classify.prob(sample), 2) for sample in prob_classify.samples()]
-            #     if (prob_samples.count(prob_samples[0]) == len(prob_samples)):
-            #         return default_label
-        # File.append('nltk.txt', str(featureset) + '\n')
         return self.__classifier.classify(featureset)
 
     def prob_classify(self, featureset):

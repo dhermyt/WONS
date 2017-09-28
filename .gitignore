@@ -20,3 +20,5 @@
 /wheels
 /tools/datasetgenerator/configuration.py
 /tools/votingconsole/configuration.py
+/tools/datasetgenerator/toolsettings.py
+/tools/votingconsole/toolsettings.py
