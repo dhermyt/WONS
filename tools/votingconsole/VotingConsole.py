@@ -32,6 +32,13 @@ if __name__ == '__main__':
     dataset = client.get_dataset()
     classifier = TextClassifier()
     classifier.initialize()
+    countToVote = 0
+    for textData in dataset:
+        if not has_already_voted(textData, user, userVotes) and classifier.matches(textData["Text"]):
+            countToVote += 1
+    print("Text data to vote: {}".format(countToVote))
+    msvcrt.getch().decode('ASCII')
+    dataset = client.get_dataset()
     cls()
     for textData in dataset:
         if has_already_voted(textData, user, userVotes):
@@ -39,7 +46,6 @@ if __name__ == '__main__':
         if not classifier.matches(textData["Text"]):
             continue
 
-        print("Already voted: {}".format(len(userVotes)))
         print()
         print(textData["Text"])
         vote = msvcrt.getch().decode('ASCII')
@@ -48,3 +54,4 @@ if __name__ == '__main__':
             continue
         client.put_vote(user, textData["_id"], key_to_sentiment_mapping[vote])
         cls()
+        print("Already voted: {}".format(len(userVotes)))

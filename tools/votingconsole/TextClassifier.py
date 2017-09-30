@@ -33,6 +33,8 @@ class TextClassifier:
             return True
         if ToolSettings.CLASSIFIER_MATCH_METHOD == "only_unknown":
             return self.is_unknown_line(line)
+        if ToolSettings.CLASSIFIER_MATCH_METHOD == "only_uncertain":
+            return self.is_uncertain_line(line)
 
     def is_unknown_line(self, line):
         linesToPrint = []
@@ -57,3 +59,21 @@ class TextClassifier:
             [print(x) for x in linesToPrint]
         return isUnknown
 
+    def is_uncertain_line(self, line):
+        linesToPrint = []
+        linesToPrint.append("line: {}".format(line))
+        featureset = bagofwords.get_processed_bag_of_words(line, self.__lemmatizer, self.__settings)
+        linesToPrint.append("featureset: {}".format(featureset))
+        if len(featureset) == 0:
+            [print(x) for x in linesToPrint]
+            return True
+        prob_classify = self.__classifier.prob_classify(featureset)
+        for sample in prob_classify.samples():
+            linesToPrint.append("{}: {}".format(sample, prob_classify.prob(sample)))
+        prob_classify = self.__classifier.prob_classify(featureset)
+        prob_samples = [round(prob_classify.prob(sample), 2) for sample in prob_classify.samples()]
+        isUncertain = max(prob_samples) < ToolSettings.CLASSIFIER_MATCH_UNCERTAINTY_THRESHOLD
+        if isUncertain:
+            linesToPrint.append("my type: {}".format(prob_classify.max()))
+            [print(x) for x in linesToPrint]
+        return isUncertain
