@@ -22,3 +22,4 @@
 /tools/votingconsole/configuration.py
 /tools/datasetgenerator/toolsettings.py
 /tools/votingconsole/toolsettings.py
+/tools/classifiergenerator/toolsettings.py

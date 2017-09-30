@@ -40,8 +40,8 @@ class SentimentAnalysisToolbox:
         pickle.dump(component, f, protocol=pickle.HIGHEST_PROTOCOL)
         f.close()
 
-    def save_json(self, filename, component):
-        filepath = os.path.join(SENTIMENT_ANALYSIS_DATA_DIR, filename)
+    def save_json(self, filename, component, encoder=None):
+        filepath = os.path.join(SENTIMENT_ANALYSIS_DATA_DIR, "{}.json".format(filename))
         f = codecs.open(filepath, 'w', encoding='utf-8')
-        f.write(json.dumps(component.__dict__, ensure_ascii=False))
+        f.write(json.dumps(component.__dict__, ensure_ascii=False, cls=encoder))
         f.close()

@@ -23,16 +23,14 @@ class NltkClassifierWrapper(object):
     def is_initialized(self):
         return self.__classifier is not None
 
-    def load(self, filename=None):
+    def load(self, filename):
         toolbox = SentimentAnalysisToolbox()
-        if filename is None:
-            filename = '{}.classifier'.format(self.get_name())
+        filename += ".classifier"
         self.__classifier = toolbox.load_binary(filename)
 
-    def save(self, filename=None):
+    def save(self, filename):
         toolbox = SentimentAnalysisToolbox()
-        if filename is None:
-            filename = '{}.classifier'.format(self.get_name())
+        filename += ".classifier"
         toolbox.save_binary(filename, self.__classifier)
 
     def train(self, datasetname, settings):
