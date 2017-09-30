@@ -2,7 +2,6 @@
 
 import unittest
 import nltk.data
-import analysis.word
 import os
 import codecs
 from nltk.metrics import BigramAssocMeasures
@@ -38,10 +37,6 @@ class Test_nltkSamples(unittest.TestCase):
     def test_wordnet_synsets(self):
         synsets = nltk.corpus.wordnet.synsets('Politechnika')
         self.assertEqual(len(synsets), 2)
-
-    def test_wordnet_synonyms(self):
-        synonyms = analysis.word.getSynonyms('kot')
-        self.assertEqual(len(synonyms), 6)
 
     def test_synsets_wup(self):
         w1 = nltk.corpus.wordnet.synsets('kot')[0]

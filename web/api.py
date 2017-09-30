@@ -1,7 +1,6 @@
 import sys, os
 
 from analysis.textclassification import bagofwords
-from analysis.textclassification.NltkClassifierFactory import NltkClassifierFactory
 from configuration.Decoder import SettingsDecoder
 from tools.SentimentAnalysisToolbox import SentimentAnalysisToolbox
 
@@ -15,35 +14,12 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from flask import Flask, redirect
 from flask_restful import Resource, Api, reqparse
-import analysis.word
 from applicationinsights.requests import WSGIApplication
 
 app = Flask(__name__, static_folder='assets')
 if os.environ.get('APPSETTING_APPLICATION_INSIGHTS_INSTRUMENTATION_KEY') is not None:
     app.wsgi_app = WSGIApplication(os.environ.get('APPSETTING_APPLICATION_INSIGHTS_INSTRUMENTATION_KEY'), app.wsgi_app)
 api = Api(app)
-
-
-class WordSynonyms(Resource):
-    parser = reqparse.RequestParser()
-    parser.add_argument('word')
-    schema = Schema({
-        Required('word'): All(str, Length(min=1, max=200))
-    })
-
-    def post(self):
-        args = self.parser.parse_args()
-        try:
-            self.schema(args)
-        except MultipleInvalid as e:
-            return str(e), 400, {'Access-Control-Allow-Origin': '*'}
-        synonyms = analysis.word.getSynonyms(args['word'])
-        return {'word': args['word'], 'synonyms': synonyms}, 200, {'Access-Control-Allow-Origin': '*'}
-
-    def options(self):
-        return {'Allow': 'POST'}, 200, \
-               {'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': 'POST'}
 
 
 class SentimentAnalysis(Resource):
@@ -91,7 +67,6 @@ def after_request(response):
     return response
 
 
-api.add_resource(WordSynonyms, '/api/word/synonyms')
 api.add_resource(SentimentAnalysis, '/api/text/sentimentanalysis')
 
 if __name__ == '__main__':
