@@ -14,8 +14,8 @@ class SentimentAnalysisToolbox:
         categorized_set = corpus.load_categorized_data(datasetname)
         feature_set = corpus.label_features_from_corpus(categorized_set, feature_detector)
         selected_feature_set = corpus.select_most_informative_features(feature_set,
-                                                                       settings.topInformativeFeaturesPercentile)
-        return corpus.split_label_features(selected_feature_set, settings.trainTestSplit, True)
+                                                                       settings.TOP_INFORMATIVE_FEATURES_PERCENTILE)
+        return corpus.split_label_features(selected_feature_set, settings.TRAIN_TEST_SPLIT, True)
 
     def load_features(self, datasetname, settings):
         lemmatizer = None
@@ -45,3 +45,9 @@ class SentimentAnalysisToolbox:
         f = codecs.open(filepath, 'w', encoding='utf-8')
         f.write(json.dumps(component.__dict__, ensure_ascii=False, cls=encoder))
         f.close()
+
+    def load_json(self, filename, component, decoder=None):
+        filepath = os.path.join(SENTIMENT_ANALYSIS_DATA_DIR, "{}.json".format(filename))
+        f = codecs.open(filepath, 'r', encoding='utf-8')
+        component.__dict__ = json.load(f, cls=decoder)
+        return component

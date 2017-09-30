@@ -2,6 +2,8 @@ import sys, os
 
 from analysis.textclassification import bagofwords
 from analysis.textclassification.NltkClassifierFactory import NltkClassifierFactory
+from configuration.Decoder import SettingsDecoder
+from tools.SentimentAnalysisToolbox import SentimentAnalysisToolbox
 
 sys.path.append('D:\\home\\site\\wwwroot\\env\\Lib\\site-packages')
 
@@ -47,18 +49,16 @@ class WordSynonyms(Resource):
 class SentimentAnalysis(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument('text')
-    parser.add_argument('trainingset')
-    classifiers = {'product_reviews': NltkClassifierFactory.SklearnMultinomialNB(),
-                   'people_opinions': NltkClassifierFactory.SklearnVoting()}
     schema = Schema({
-        Required('text'): All(str, Length(min=1, max=1000)),
-        Optional('trainingset'): In(list(classifiers.keys()))
+        Required('text'): All(str, Length(min=1, max=1000))
     })
-    for key, value in classifiers.items():
-        value.load(key)
-    s = Settings()
-    s.filterStopwords = True
-    s.maxNgrams = 3
+    toolbox = SentimentAnalysisToolbox()
+    decoder = SettingsDecoder()
+    settings = toolbox.load_json('default', Settings())
+    settings.LEMMATIZER_TYPE = decoder.decode_type(settings.LEMMATIZER_TYPE)
+    settings.CLASSIFIER_TYPE = decoder.decode_classifier(settings.CLASSIFIER_TYPE)
+    classifier = settings.CLASSIFIER_TYPE()
+    classifier.load('default')
 
     def post(self):
         args = self.parser.parse_args()
@@ -66,8 +66,8 @@ class SentimentAnalysis(Resource):
             self.schema(args)
         except MultipleInvalid as e:
             return str(e), 400, {'Access-Control-Allow-Origin': '*'}
-        text = bagofwords.get_processed_bag_of_words(args['text'], None, self.s)
-        sa = self.classifiers[args['trainingset']].classify(text, 'neutral')
+        text = bagofwords.get_processed_bag_of_words(args['text'], None, self.settings)
+        sa = self.classifier.classify(text)
         return {'text': args['text'], 'sentiment': sa}, 200, {'Access-Control-Allow-Origin': '*'}
 
 

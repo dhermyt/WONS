@@ -35,8 +35,8 @@ class NltkClassifierWrapper(object):
 
     def train(self, datasetname, settings):
         lemmatizer = None
-        if settings.lemmatizerType is not None:
-            lemmatizer = settings.lemmatizerType()
+        if settings.LEMMATIZER_TYPE is not None:
+            lemmatizer = settings.LEMMATIZER_TYPE()
             lemmatizer.initialize()
         toolbox = SentimentAnalysisToolbox()
         train_set, test_set = toolbox.load_data_set(datasetname, settings,

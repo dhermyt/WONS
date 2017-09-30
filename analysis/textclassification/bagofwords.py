@@ -59,13 +59,13 @@ def get_processed_bag_of_words(text, lemmatizer, settings):
     words = get_all_lowercase(words)
     if lemmatizer is not None:
         words = [lemmatizer.get_lemma(word) for word in words]
-    if (settings.filterStopwords):
+    if (settings.FILTER_STOPWORDS):
         words = filter_stopwords(words)
     words = mark_negations(words)
     words = filter_custom_set(words, INVALID_TOKEN_PATTERN)
-    if settings.maxFeatures > 0:
-        words = words[:settings.maxFeatures]
+    if settings.MAX_FEATURES > 0:
+        words = words[:settings.MAX_FEATURES]
     words = functools.reduce(lambda x, y: x + y,
                              [words if n == 1 else list([' '.join(ngram) for ngram in ngrams(words, n)]) for n in
-                              range(1, settings.maxNgrams + 1)])
+                              range(1, settings.MAX_NGRAMS + 1)])
     return get_bag_of_words(words)
