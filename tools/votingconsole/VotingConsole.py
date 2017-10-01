@@ -38,7 +38,7 @@ if __name__ == '__main__':
             countToVote += 1
     print("Text data to vote: {}".format(countToVote))
     msvcrt.getch().decode('ASCII')
-    dataset = client.get_dataset()
+    dataset = client.get_dataset(toolSettings.WONS_DATASET_SOURCE)
     cls()
     for textData in dataset:
         if has_already_voted(textData, user, userVotes):
