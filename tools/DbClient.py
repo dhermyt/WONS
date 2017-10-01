@@ -37,7 +37,7 @@ class DbClient:
             "UserId": userid,
             "TextDataId" :dataid,
             "SentimentValue": vote,
-            "CreatedAt": datetime.now()
+            "CreatedAt": datetime.utcnow()
         }
         self.__db.UserVotes.insert_one(userVote)
 
