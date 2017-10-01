@@ -15,10 +15,16 @@ if __name__ == '__main__':
     client = DbClient()
     toolSettings = ToolSettings()
     client.connect(toolSettings.DB_USER, toolSettings.DB_PASSWORD, toolSettings.DB_HOST, toolSettings.DB_PORT)
-    user = client.get_user_id(toolSettings.WONS_USERNAME)
-    userVotes = client.get_user_votes(user)
-    dataset = [data for data in client.get_dataset(toolSettings.WONS_DATASET_SOURCE)]
-    dataset_path = os.path.join(DATASETS_LOCAL_DIR, toolSettings.WONS_DATASET_SOURCE)
+    dataset_names = toolSettings.WONS_DATASET_SOURCE.split(',')
+    dataset = []
+    for dataset_name in dataset_names:
+        dataset += [data for data in client.get_dataset(dataset_name)]
+    userVotes = []
+    usernames = toolSettings.WONS_USERNAME.split(",")
+    for username in usernames:
+        user = client.get_user_id(username)
+        userVotes += [vote for vote in client.get_user_votes(user)]
+    dataset_path = os.path.join(DATASETS_LOCAL_DIR, toolSettings.WONS_DATASET_DEST_NAME)
     voteData = []
     for vote in userVotes:
         for data in dataset:
