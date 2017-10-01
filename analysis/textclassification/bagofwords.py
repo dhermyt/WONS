@@ -55,7 +55,7 @@ def mark_negations(words):
 
 
 def get_processed_bag_of_words(text, lemmatizer, settings):
-    words = nltk.tokenize.word_tokenize(text)
+    words = nltk.tokenize.word_tokenize(text, 'polish')
     words = get_all_lowercase(words)
     if lemmatizer is not None:
         words = [lemmatizer.get_lemma(word) for word in words]
