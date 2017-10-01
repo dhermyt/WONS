@@ -3,9 +3,8 @@ import os
 from analysis.lemmatizers.dblookup import DbLookupLemmatizer
 from analysis.textclassification import bagofwords
 from analysis.textclassification.NltkClassifierFactory import NltkClassifierFactory
-from configuration.appsettings import Settings
 from definitions import DATASETS_LOCAL_DIR
-from tools.votingconsole.toolsettings import Settings as ToolSettings
+from tools.votingconsole.toolsettings import ToolSettings
 
 
 class TextClassifier:
@@ -14,26 +13,26 @@ class TextClassifier:
     __settings = None
 
     def initialize(self):
-        s = Settings()
-        s.filterStopwords = True
-        s.maxNgrams = 3
-        s.topInformativeFeaturesPercentile = 1.0
-        s.lemmatizerType = DbLookupLemmatizer
+        toolSettings = ToolSettings()
+        toolSettings.FILTER_STOPWORDS = True
+        toolSettings.MAX_NGRAMS= 3
+        toolSettings.TOP_INFORMATIVE_FEATURES_PERCENTILE= 1.0
+        toolSettings.LEMMATIZER_TYPE = DbLookupLemmatizer
         self.__lemmatizer = None
-        if s.lemmatizerType is not None:
-            self.__lemmatizer = s.lemmatizerType()
+        if toolSettings.LEMMATIZER_TYPE is not None:
+            self.__lemmatizer = toolSettings.LEMMATIZER_TYPE()
             self.__lemmatizer.initialize()
-        dest_dataset = os.path.join(DATASETS_LOCAL_DIR, ToolSettings.WONS_DATASET_SOURCE)
+        dest_dataset = os.path.join(DATASETS_LOCAL_DIR, toolSettings.WONS_CLASSIFIER_SOURCE)
         self.__classifier = NltkClassifierFactory.SklearnMultinomialNB()
-        self.__classifier.train(dest_dataset, s)
-        self.__settings = s
+        self.__classifier.train(dest_dataset, toolSettings)
+        self.__settings = toolSettings
 
     def matches(self, line):
-        if ToolSettings.CLASSIFIER_MATCH_METHOD == "all":
+        if self.__settings.CLASSIFIER_MATCH_METHOD == "all":
             return True
-        if ToolSettings.CLASSIFIER_MATCH_METHOD == "only_unknown":
+        if self.__settings.CLASSIFIER_MATCH_METHOD == "only_unknown":
             return self.is_unknown_line(line)
-        if ToolSettings.CLASSIFIER_MATCH_METHOD == "only_uncertain":
+        if self.__settings.CLASSIFIER_MATCH_METHOD == "only_uncertain":
             return self.is_uncertain_line(line)
 
     def is_unknown_line(self, line):
@@ -72,7 +71,7 @@ class TextClassifier:
             linesToPrint.append("{}: {}".format(sample, prob_classify.prob(sample)))
         prob_classify = self.__classifier.prob_classify(featureset)
         prob_samples = [round(prob_classify.prob(sample), 2) for sample in prob_classify.samples()]
-        isUncertain = max(prob_samples) < ToolSettings.CLASSIFIER_MATCH_UNCERTAINTY_THRESHOLD
+        isUncertain = max(prob_samples) < self.__settings.CLASSIFIER_MATCH_UNCERTAINTY_THRESHOLD
         if isUncertain:
             linesToPrint.append("my type: {}".format(prob_classify.max()))
             [print(x) for x in linesToPrint]

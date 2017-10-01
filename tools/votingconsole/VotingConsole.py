@@ -1,7 +1,7 @@
 import os
 import msvcrt
 
-from tools.votingconsole.toolsettings import Settings as ToolSettings
+from tools.votingconsole.toolsettings import ToolSettings
 from tools.DbClient import DbClient
 from tools.votingconsole.TextClassifier import TextClassifier
 
@@ -24,12 +24,12 @@ def has_already_voted(textData, user, userVotes):
 
 
 if __name__ == '__main__':
-    os.environ["DEBUG"] = "1"
     client = DbClient()
-    client.connect(ToolSettings())
-    user = client.get_user_id()
+    toolSettings = ToolSettings()
+    client.connect(toolSettings.DB_USER, toolSettings.DB_PASSWORD, toolSettings.DB_HOST, toolSettings.DB_PORT)
+    user = client.get_user_id(toolSettings.WONS_USERNAME)
     userVotes = client.get_user_votes(user)
-    dataset = client.get_dataset()
+    dataset = client.get_dataset(toolSettings.WONS_DATASET_SOURCE)
     classifier = TextClassifier()
     classifier.initialize()
     countToVote = 0
