@@ -1,7 +1,7 @@
 import codecs
 
 from tools.DbClient import DbClient
-from tools.datasetgenerator.toolsettings import Settings as ToolSettings
+from tools.datasetgenerator.toolsettings import ToolSettings
 from definitions import DATASETS_LOCAL_DIR
 import os
 
@@ -13,11 +13,12 @@ key_to_sentiment_mapping = {
 
 if __name__ == '__main__':
     client = DbClient()
-    client.connect(ToolSettings())
-    user = client.get_user_id()
+    toolSettings = ToolSettings()
+    client.connect(toolSettings.DB_USER, toolSettings.DB_PASSWORD, toolSettings.DB_HOST, toolSettings.DB_PORT)
+    user = client.get_user_id(toolSettings.WONS_USERNAME)
     userVotes = client.get_user_votes(user)
-    dataset = [data for data in client.get_dataset()]
-    dataset_path = os.path.join(DATASETS_LOCAL_DIR, ToolSettings.WONS_DATASET_SOURCE)
+    dataset = [data for data in client.get_dataset(toolSettings.WONS_DATASET_SOURCE)]
+    dataset_path = os.path.join(DATASETS_LOCAL_DIR, toolSettings.WONS_DATASET_SOURCE)
     voteData = []
     for vote in userVotes:
         for data in dataset:

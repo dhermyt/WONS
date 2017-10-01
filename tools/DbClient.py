@@ -5,18 +5,16 @@ from datetime import datetime
 class DbClient:
     __client = None
     __db = None
-    __configuration = None
 
-    def connect(self, configuration):
+    def connect(self, user, password, host ,port):
 
         uri = "mongodb://%s:%s@%s/wonsdb" % (
-            quote_plus(configuration.DB_USER), quote_plus(configuration.DB_PASSWORD), "{}:{}".format(configuration.DB_HOST, configuration.DB_PORT))
+            quote_plus(user), quote_plus(password), "{}:{}".format(host, port))
         self.__client = pymongo.MongoClient(uri)
         self.__db = self.__client.wonsdb
-        self.__configuration = configuration
 
-    def get_user_id(self):
-        userData = {"Username": self.__configuration.WONS_USERNAME}
+    def get_user_id(self, username):
+        userData = {"Username": username}
         user = self.__db.Users.find_one(userData)
         if user is not None:
             return user["_id"]
@@ -29,8 +27,8 @@ class DbClient:
             votes.append(vote)
         return votes
 
-    def get_dataset(self):
-        return self.__db.Dataset.find({"Source": self.__configuration.WONS_DATASET_SOURCE})
+    def get_dataset(self, dataset):
+        return self.__db.Dataset.find({"Source": dataset})
 
     def put_vote(self, userid, dataid, vote):
         userVote = {
