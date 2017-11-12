@@ -22,7 +22,7 @@ build:
     - mv wons-data/data .
     - rm -rf wons-data
     - rm wons-data.zip
-    - docker login registry.gitlab.com
+    - docker login registry.gitlab.com -u $gitlab_registry_user -p $gitlab_registry_password
     - docker build -t registry.gitlab.com/dhermyt/wons .
     - docker push registry.gitlab.com/dhermyt/wons
 
