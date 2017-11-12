@@ -1,7 +1,7 @@
 import codecs
 
 from tools.DbClient import DbClient
-from tools.datasetgenerator.toolsettings import ToolSettings
+from tools.datasetgenerator.ToolSettings import ToolSettings
 from definitions import DATASETS_LOCAL_DIR
 import os
 

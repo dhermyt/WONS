@@ -3,10 +3,14 @@ import os
 from configuration.Encoder import SettingsEncoder
 from definitions import DATASETS_LOCAL_DIR
 from tools.SentimentAnalysisToolbox import SentimentAnalysisToolbox
-from tools.classifiergenerator.toolsettings import ToolSettings
+from tools.classifiergenerator.ToolSettings import ToolSettings
+from configuration.Decoder import SettingsDecoder
 
 if __name__ == '__main__':
     toolSettings = ToolSettings()
+    decoder = SettingsDecoder()
+    toolSettings.CLASSIFIER_TYPE = decoder.decode_classifier(toolSettings.CLASSIFIER_TYPE)
+    toolSettings.LEMMATIZER_TYPE = decoder.decode_type(toolSettings.LEMMATIZER_TYPE)
     lemmatizer = None
     if toolSettings.LEMMATIZER_TYPE is not None:
         lemmatizer = toolSettings.LEMMATIZER_TYPE()
