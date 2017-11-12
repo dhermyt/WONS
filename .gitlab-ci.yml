@@ -18,7 +18,9 @@ build:
     - cd WONS
     - rm -rf .git
     - aws s3 cp s3://wons-public-files/wons-data.zip wons-data.zip
-    - unzip -j wons-data.zip
+    - unzip wons-data.zip
+    - mv wons-data/data .
+    - rm -rf wons-data
     - rm wons-data.zip
     - docker login registry.gitlab.com
     - docker build -t registry.gitlab.com/dhermyt/wons .
