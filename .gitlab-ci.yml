@@ -1,26 +1,21 @@
-image: docker:git
+image: python:3.6
 services:
   - docker:dind
 
 stages:
-  - build
+  - deploy
 
 build:
-  stage: build
+  stage: deploy
   script:
     - export AWS_REGION="us-east-1"
     - export AWS_ACCESS_KEY_ID=$aws_access_key_id
     - export AWS_SECRET_ACCESS_KEY=$aws_secret_access_key
-    - apk update
-    - apk --no-cache add --update curl python python-dev py-pip unzip
     - pip install awscli --upgrade
-    - git clone https://github.com/dhermyt/WONS.git
-    - cd WONS
-    - rm -rf .git
     - aws s3 cp s3://wons-public-files/wons-data.zip wons-data.zip
     - unzip wons-data.zip
     - rm wons-data.zip
     - docker login registry.gitlab.com -u $gitlab_registry_user -p $gitlab_registry_password
     - docker build -t registry.gitlab.com/dhermyt/wons .
-    - docker push registry.gitlab.com/dhermyt/wons
+    - docker push registry.gitlab.com/dhermyt/wons:$CI_COMMIT_REF_SLUG
 
