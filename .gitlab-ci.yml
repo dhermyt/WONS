@@ -16,6 +16,6 @@ build:
     - unzip wons-data.zip
     - rm wons-data.zip
     - docker login registry.gitlab.com -u $gitlab_registry_user -p $gitlab_registry_password
-    - docker build -t registry.gitlab.com/dhermyt/wons .
+    - docker build -t registry.gitlab.com/dhermyt/wons:$CI_COMMIT_REF_SLUG .
     - docker push registry.gitlab.com/dhermyt/wons:$CI_COMMIT_REF_SLUG
 
