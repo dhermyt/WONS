@@ -1,14 +1,16 @@
 FROM python:3.6
 
-WORKDIR /app
-
 ADD . /app
+
+ENV PYTHONPATH /app
+
+WORKDIR /app
 
 RUN pip install -r requirements.txt
 
 EXPOSE 5000
 
-ENV PYTHONPATH /app
+ENTRYPOINT ["python"]
 
-ENTRYPOINT ["python","web/boot.py"]
+CMD ["web/boot.py"]
 
