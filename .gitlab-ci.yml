@@ -17,7 +17,7 @@ build:
     - aws s3 cp s3://wons-public-files/wons-data.zip wons-data.zip
     - unzip wons-data.zip
     - rm wons-data.zip
-    - $(aws ecr get-login --no-include-email)
+    - $(aws ecr get-login --no-include-email --region eu-west-1)
     - docker build -t wons:$CI_COMMIT_REF_SLUG .
     - docker tag wons:$CI_COMMIT_REF_SLUG $REPOSITORY_URL:$CI_COMMIT_REF_SLUG
     - docker push $REPOSITORY_URL:$CI_COMMIT_REF_SLUG
