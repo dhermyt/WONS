@@ -1,0 +1,13 @@
+{
+  "AWSEBDockerrunVersion": "1",  
+  "Image": {
+    "Name": "269867701994.dkr.ecr.eu-west-1.amazonaws.com/wons-repo:master",
+    "Update": "true"
+  },
+  "Ports": [
+    {
+      "ContainerPort": "5000"
+    }
+  ],
+  "Logging": "/var/log/wons"
+}
