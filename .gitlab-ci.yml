@@ -1,23 +1,23 @@
-image: python:3.6
+image: docker:latest
 
 services:
-  - docker:dind
+- name: docker:dind
 
-variables:
-  REPOSITORY_URL: 269867701994.dkr.ecr.eu-west-1.amazonaws.com/wons-repo
+  before_script:
+    - docker version
+    - chkconfig docker on
+    - docker info
 
-stages:
-  - deploy
-
-build:
-  stage: deploy
-  script:    
+deploy:
+  script:
+    - apk add --update python py-pip unzip
     - pip install awscli --upgrade
-    - apt-get update && apt-get install unzip
     - aws s3 cp s3://wons-public-files/wons-data.zip wons-data.zip
     - unzip wons-data.zip
     - rm wons-data.zip
-    - $(aws ecr get-login --no-include-email --region eu-west-1)
-    - docker build -t wons:$CI_COMMIT_REF_SLUG .
-    - docker tag wons:$CI_COMMIT_REF_SLUG $REPOSITORY_URL:$CI_COMMIT_REF_SLUG
-    - docker push $REPOSITORY_URL:$CI_COMMIT_REF_SLUG
+    - docker login -u $REGISTRY_USERNAME -p $REGISTRY_PASSWORD
+    - docker build -t wons:latest .
+    - docker tag wons:latest lem1x/wons:latest
+    - docker push lem1x/wons:latest
+  only:
+    - master
