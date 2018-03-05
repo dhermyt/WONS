@@ -3,10 +3,10 @@ image: docker:latest
 services:
 - name: docker:dind
 
-  before_script:
-    - docker version
-    - chkconfig docker on
-    - docker info
+before_script:
+  - docker version
+  - chkconfig docker on
+  - docker info
 
 deploy:
   script:
