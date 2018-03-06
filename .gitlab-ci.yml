@@ -1,4 +1,4 @@
-image: docker:latest
+image: lem1x/docker-python-aws:latest
 
 services:
 - name: docker:dind
@@ -9,8 +9,7 @@ before_script:
 
 deploy:
   script:
-    - apk add --update python py-pip unzip
-    - pip install awscli --upgrade
+    - apk add --update unzip
     - aws s3 cp s3://wons-public-files/wons-data.zip wons-data.zip
     - unzip wons-data.zip
     - rm wons-data.zip
